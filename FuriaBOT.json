@@ -1,0 +1,288 @@
+{
+  "name": "FuriaBOT",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -260
+      ],
+      "id": "bff97d74-d32c-4f1b-8704-613a3b71f065",
+      "name": "Telegram Trigger",
+      "webhookId": "fac7b619-87fb-4fe2-8b43-eda808e35884",
+      "credentials": {
+        "telegramApi": {
+          "id": "rqZHxI9MKf0VQvpA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1060,
+        -260
+      ],
+      "id": "9b3652b1-d0de-402e-8111-313a86598f23",
+      "name": "Telegram1",
+      "webhookId": "50214984-4170-4bc0-a0ad-6c99e6eae6c4",
+      "credentials": {
+        "telegramApi": {
+          "id": "rqZHxI9MKf0VQvpA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        -260
+      ],
+      "id": "670d1dd2-5a36-4634-86ac-fa2a7526c148",
+      "name": "Telegram",
+      "webhookId": "7520ee07-53f4-4a0b-9dc8-44b2290cbb9b",
+      "credentials": {
+        "telegramApi": {
+          "id": "rqZHxI9MKf0VQvpA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Utilize o seguinte padrão de texto para cada uma das mensagens que você gerar:\n\nPadrão do Texto:\n\n    Abertura chamativa: começa com emoção, frase de impacto ou brincadeira.\n\n    Uso de emojis: para reforçar tom, emoção ou dar estilo visual.\n\n    Frases curtas e informais: linguagem solta, sem formalidade.\n\n    Mistura de idiomas: especialmente inglês e expressões locais.\n\n    Identidade da marca: referência constante à FURIA (ex: \"🐾\", \"🖤\"), mas sem muitos exageros.\n\n    Estilo visual solto: quebras de linha, ritmo leve.\n\n\nNa primeira mesagem recepida diga esse texto exatamente assim:\n\nComece fazendo um comprimento e depois diga exatamente isso:\n\n\"Deseja saber que qual opção:\n1 - Próximos Jogos\n2 - Ultimos Jogos\n3 - Elenco do Time\n4 - Produtos\n5 - Outras Redes\"\n\nEssa mensagem precisa ser mandada desse jeito inicialmente.\nCaso o usuário mande uma resposta sem sentido de inicio, responda ele de forma que você conecte o assunto á Furia e retorne para o texto inicial, perguntando qual opção ele deseja escolher (você precisa fazer ele escolher uma das 5 opções lá).\n\n\nDepois que usuário responder a opção faça isso de acordo com os casos a seguir:\n\nCaso ele escolha opção 1, fale sobre os próximos jogos da fúria, faça um get no \"HTTP Request\", caso não foram encontradas partidas, diga que infelizmente ainda não há nenhuma partida planejada.\n\nCaso ele escolha opção 2, fale sobre os ultimos jogos da fúria, faça um get no \"HTTP Request2\" nos resultados, sempre mostre o resultado da partida.\n\n\nCaso ele escolha opção 3, imprima os jogadores da fúria. nesse formato aqui, mas mantenha o formato e envie para o usuário em texto (string), nunca envie para o usuário em um formato de código em linha (```), mantenha em formato de texto. :\n\"\n*Line-up Titular Atual da FURIA*:\n    🇰🇿 MOLODOY\n    🇱🇻 YEKINDAR\n    🇧🇷 FalleN\n    🇧🇷 KSCERATO\n    🇧🇷 yuurih​\n\n*Jogadores Reservas*:\n    🇧🇷 skullz\n    🇧🇷 chelo​\n\n*Comissão Técnica*:\n    Hepa (Coach)\n    sidde (Coach)\n\"\n\npara mais informações da equipe faça um get nessa api:\nhttps://api.draft5.gg/teams/330\n\nCaso ele escolha opção 4, imprima para o usuário os produtos da fúria:\n[Produtos FURIA](https://www.furia.gg/)\n\nCaso ele escolha opção 5, imprima essa lista de redes da fúria:\n[Instagram](https://www.instagram.com/furiagg/)\n[Twitter](https://x.com/furia)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        600,
+        -260
+      ],
+      "id": "cf1fd334-8128-4f96-b110-34c9c2673aa0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Ignore todas as outras informações e concentre-se apenas no objeto 'playerData'. Extraia apenas os nomes dos jogadores ativos da equipe, localizados nas posições de índice de 0 até 17 do array 'playerData'. ",
+        "url": "https://api.draft5.gg/teams/330"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        40
+      ],
+      "id": "c8f8e553-aa0b-43bf-adac-2c440ad13b56",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "toolDescription": "apenas retorne o valor que está na div com class: Card__CardContainer-sc-122kzjp-0 cUwtSB EmptyState__EmptyStateContainer-sc-12we3sr-0 kgJxzs.\nRetorne o valor do <p> dentro dessa div.",
+        "url": "https://draft5.gg/equipe/330-FURIA/proximas-partidas"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        40
+      ],
+      "id": "cce1a42f-1852-4d6a-8b27-b09526826177",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "quero apenas o resultado da div class= id__ContentContainer-sc-1x9brse-2 hlMjcl .\n\nAonde a tag <p> tenha o valor do ultimo mês, exemplo: 📅 quarta-feira, 9 de abril de 2025. No máximo 6 <p>.\n\ne que retorne o nome do time inimigo vs a furia e o resultado, que estão na seguinte div:\ndiv class=MatchCardSimple__MatchContainer-sc-wcmxha-0 kSyLSS",
+        "url": "https://draft5.gg/equipe/330-FURIA/resultados"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1080,
+        40
+      ],
+      "id": "98088346-8bbb-4ed6-94f7-aecb11477be0",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        40
+      ],
+      "id": "88c5a4d8-86c0-46b4-a462-75583ef262cc",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        40
+      ],
+      "id": "cee0a604-9dae-412f-8e70-a4879cbd3710",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mVkJMsoibF8IyRZl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "83d5c26e-4559-419e-9459-ae115ba4f2fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "56c70940ae8d703f1955d1f39dd83f6b0f2625890ef2dd9369987b08ec650bfd"
+  },
+  "id": "0SpHanOoFVi6eRZX",
+  "tags": [
+    {
+      "createdAt": "2025-04-26T20:45:33.485Z",
+      "updatedAt": "2025-04-26T20:45:33.485Z",
+      "id": "Gy4fMQ4Ek2ZLxz01",
+      "name": "furia"
+    },
+    {
+      "createdAt": "2025-04-26T20:45:18.916Z",
+      "updatedAt": "2025-04-26T20:45:18.916Z",
+      "id": "NRTYUetkmdfl0isU",
+      "name": "telegram-bot"
+    },
+    {
+      "createdAt": "2025-04-26T20:45:12.569Z",
+      "updatedAt": "2025-04-26T20:45:12.569Z",
+      "id": "dflBLI09lPJVu33p",
+      "name": "gemini"
+    }
+  ]
+}
