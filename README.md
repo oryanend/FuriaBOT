@@ -2,7 +2,7 @@
 
 <h1 align="center">FuriaBOT</h1>
 <p align='center'>
-    <a href="#" style="display: block; text-align: center; padding: 10px; background: #ff0000; color: white; text-decoration: none; border-radius: 5px; width: 200px; margin: 0 auto;">
+    <a href="https://www.youtube.com/watch?v=mByCJg8oVxs" style="display: block; text-align: center; padding: 10px; background: #ff0000; color: white; text-decoration: none; border-radius: 5px; width: 200px; margin: 0 auto;">
       ▶ Vídeo de Apresentação
     </a>
 </p>
